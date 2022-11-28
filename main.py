@@ -1,24 +1,31 @@
 import pygame as pg
 import sys
 from settings import *
-
+from map import *
+from player import *
 
 class Game:
     def __init__(self):
         pg.init()   #initializes pygame modules
         self.screen = pg.display.set_mode(res)  #creates a screen for rendering the set resolution
         self.clock = pg.time.Clock()    #instance of the clock class for frame-rate
+        self.delta_time = 1     #delta time is so that movement speed can be independent of frame-rate
+        self.new_game()
 
     def new_game(self):
-        pass
+        self.map = Map(self)    #instance of Map class
+        self.player = Player(self)      #instance of player class
 
     def update(self):       #function for updating the screen
+        self.player.update()
         pg.display.flip()       #flip updates the screen
-        self.clock.tick(fps)    #tick is a measure of time. so this says for every second, 60 frames should pass
+        self.delta_time = self.clock.tick(fps)    #tick is a measure of time. so this says for every second, 60 frames should pass
         pg.display.set_caption(f"{self.clock.get_fps() :.1f}")  #display fps in the window caption with 1 decimal place (the .1f does this)
 
     def draw(self):
         self.screen.fill("black")   #at each iteration, paint the screen black
+        self.map.draw()     #draw the map
+        self.player.draw()      #draw the player
 
     def check_events(self): #function checks for the events of closing the working window or pressing the escape key, and exits app if this happens
         for event in pg.event.get():
