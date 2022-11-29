@@ -9,7 +9,7 @@ class Player:
         self.x, self.y = player_pos
         self.angle = player_angle   #x/y coordinates of player and angle of direction taken from settings
 
-    def movement(self):
+    def movement(self): #this whole function is math for player move speed and camera turn speed
         sin_a = math.sin(self.angle)    #uses sin and cos from math to determine angles related to movement
         cos_a = math.cos(self.angle)
         dx, dy = 0, 0
@@ -49,9 +49,9 @@ class Player:
             self.y += dy
 
     def draw(self):     #draws player on a plane
-        pg.draw.line(self.game.screen, "yellow", (self.x * 100, self.y * 100),  #draws direction of movement/where player is looking as a yellow line
-                     (self.x * 100 + width * math.cos(self.angle),
-                      self.y * 100 + width * math.sin(self.angle)), 2)
+        #pg.draw.line(self.game.screen, "yellow", (self.x * 100, self.y * 100),  #draws direction of movement/where player is looking as a yellow line
+         #            (self.x * 100 + width * math.cos(self.angle),
+           #           self.y * 100 + width * math.sin(self.angle)), 2)
         pg.draw.circle(self.game.screen, "green", (self.x * 100, self.y * 100), 15)     #player drawn as a green circle
 
     def update(self):   #updates with the latest movement
