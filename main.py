@@ -4,10 +4,12 @@ from settings import *
 from map import *
 from player import *
 from raycasting import *
+from object_renderer import *
 
 class Game:
     def __init__(self):
         pg.init()   #initializes pygame modules
+        pg.mouse.set_visible(False) #make mouse cursor invisible
         self.screen = pg.display.set_mode(res)  #creates a screen for rendering the set resolution
         self.clock = pg.time.Clock()    #instance of the clock class for frame-rate
         self.delta_time = 1     #delta time is so that movement speed can be independent of frame-rate
@@ -16,6 +18,7 @@ class Game:
     def new_game(self):
         self.map = Map(self)    #instance of Map class
         self.player = Player(self)      #instance of player class
+        self.object_renderer = ObjectRenderer(self) #instance of object renderer class
         self.raycasting = RayCasting(self)
 
     def update(self):       #function for updating the screen
@@ -26,9 +29,10 @@ class Game:
         pg.display.set_caption(f"{self.clock.get_fps() :.1f}")  #display fps in the window caption with 1 decimal place (the .1f does this)
 
     def draw(self):
-        self.screen.fill("black")   #at each iteration, paint the screen black
-        #self.map.draw()     #draw the map
-        #self.player.draw()      #draw the player
+        #self.screen.fill("black")   #at each iteration, paint the screen black (not needed now that we have background and wall textures
+        self.object_renderer.draw()
+        #self.map.draw()     #draw the map (this was for 2d testing and isnt needed now that it is 3d)
+        #self.player.draw()      #draw the player (this was for 2d testing and isnt needed now that it is 3d)
 
     def check_events(self): #function checks for the events of closing the working window or pressing the escape key, and exits app if this happens
         for event in pg.event.get():

@@ -12,6 +12,14 @@ player_pos = 1.5, 5 #mini_map
 player_angle = 0
 player_speed = 0.004
 player_rot_speed = 0.002
+player_size_scale = 60  #give player size larger than a dot (prevents pixelation in textures as we arent tiny)
+
+mouse_sensitivity = 0.0003  #implementing mouse functionality
+mouse_max_rel = 40  #maxmimum relative movement
+mouse_border_left = 100 #left/right border on screen for mouse
+mouse_border_right = width - mouse_border_left
+
+floor_color = (30, 30, 30)
 
 fov = math.pi / 3
 half_fov = fov / 2
@@ -22,3 +30,6 @@ max_depth = 20
 
 screen_dist = half_width/ math.tan(half_fov)    #settings for the pseudo 3d
 scale = width // num_rays
+
+texture_size = 256
+half_texture_size = texture_size // 2   #settings for size of textures
