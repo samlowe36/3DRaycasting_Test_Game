@@ -22,7 +22,8 @@ class ObjectRenderer:   #this class renders all objects in the game
         pg.draw.rect(self.screen, floor_color, (0, half_height, width, height)) #make floor based off color in settings
 
     def render_game_objects(self):
-        list_objects = self.game.raycasting.objects_to_render
+        #this is sorted as a tuple so that things are loaded in the correct order and sprites dont appear through walls
+        list_objects = sorted(self.game.raycasting.objects_to_render, key=lambda t: t[0], reverse=True)
         for depth, image, pos in list_objects:  #iterate over list of objects for rendering
             self.screen.blit(image, pos)    #draw resulting texture columns on the screen
             #blit stands for block transfer and it copies the contents of one surface onto another surface

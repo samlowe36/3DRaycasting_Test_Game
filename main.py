@@ -5,6 +5,7 @@ from map import *
 from player import *
 from raycasting import *
 from object_renderer import *
+from sprite_object import *
 
 class Game:
     def __init__(self):
@@ -20,10 +21,12 @@ class Game:
         self.player = Player(self)      #instance of player class
         self.object_renderer = ObjectRenderer(self) #instance of object renderer class
         self.raycasting = RayCasting(self)
+        self.static_sprite = SpriteObject(self)
 
     def update(self):       #function for updating the screen
         self.player.update()
         self.raycasting.update()
+        self.static_sprite.update()
         pg.display.flip()       #flip updates the screen
         self.delta_time = self.clock.tick(fps)    #tick is a measure of time. so this says for every second, 60 frames should pass
         pg.display.set_caption(f"{self.clock.get_fps() :.1f}")  #display fps in the window caption with 1 decimal place (the .1f does this)
