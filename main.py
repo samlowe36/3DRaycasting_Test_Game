@@ -6,6 +6,9 @@ from player import *
 from raycasting import *
 from object_renderer import *
 from sprite_object import *
+from object_handler import *
+from weapon import *
+from sound import *
 
 class Game:
     def __init__(self):
@@ -20,13 +23,20 @@ class Game:
         self.map = Map(self)    #instance of Map class
         self.player = Player(self)      #instance of player class
         self.object_renderer = ObjectRenderer(self) #instance of object renderer class
-        self.raycasting = RayCasting(self)
-        self.static_sprite = SpriteObject(self)
+        self.raycasting = RayCasting(self)  #etc
+        #self.static_sprite = SpriteObject(self) #re-object_handler implementation (a single sprite)
+        #self.animated_sprite = AnimatedSprite(self)    #pre-object_handler implementation (a single sprite)
+        self.object_handler = ObjectHandler(self)
+        self.weapon = Weapon(self)
+        self.sound = Sound(self)
 
     def update(self):       #function for updating the screen
         self.player.update()
         self.raycasting.update()
-        self.static_sprite.update()
+        #self.static_sprite.update()    #pre-object_handler implementation (a single sprite)
+        #self.animated_sprite.update()  #pre-object_handler implementation (a single sprite)
+        self.object_handler.update()
+        self.weapon.update()
         pg.display.flip()       #flip updates the screen
         self.delta_time = self.clock.tick(fps)    #tick is a measure of time. so this says for every second, 60 frames should pass
         pg.display.set_caption(f"{self.clock.get_fps() :.1f}")  #display fps in the window caption with 1 decimal place (the .1f does this)
@@ -34,6 +44,7 @@ class Game:
     def draw(self):
         #self.screen.fill("black")   #at each iteration, paint the screen black (not needed now that we have background and wall textures
         self.object_renderer.draw()
+        self.weapon.draw()
         #self.map.draw()     #draw the map (this was for 2d testing and isnt needed now that it is 3d)
         #self.player.draw()      #draw the player (this was for 2d testing and isnt needed now that it is 3d)
 
@@ -42,6 +53,7 @@ class Game:
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
                 sys.exit()
+            self.player.single_fire_event(event)    #check to see if player fired weapon
 
     def run(self):  #main loop of the game runs from here
         while True:

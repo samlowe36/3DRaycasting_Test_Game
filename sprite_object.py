@@ -1,6 +1,7 @@
 import pygame as pg
-import math
 from settings import *
+import os
+from collections import deque
 
 
 class SpriteObject:
@@ -50,10 +51,45 @@ class SpriteObject:
         self.dist = math.hypot(dx, dy)
         #remove fishbowl effect on sprite
         self.norm_dist = self.dist * math.cos(delta)
-        #maintain performance so sprite size doesnt balloon up and tank frame-rate if we get too close
+        #maintain performance so sprite size doesn't balloon up and tank frame-rate if we get too close
         if -self.image_half_width < self.screen_x < (width + self.image_half_width) and self.norm_dist > 0.5:
             self.get_sprite_projection()
 
     def update(self):
         self.get_sprite()
-        
+
+
+class AnimatedSprite(SpriteObject): #inherits from SpriteObject class
+    def __init__(self, game, path="resources/sprites/animated_sprites/green_light/0.png",
+                 pos=(11.5, 3.5), scale=0.8, shift=0.15, animation_time=120):   #receives all the same parameters + animation_time
+        super().__init__(game, path, pos, scale, shift) #run constructor of parent class
+        self.animation_time = animation_time    #take animation time parameter as an attribute
+        self.path = path.rsplit("/", 1)[0]  #rsplit splits the string into a list with "/" as the separator for each value
+        self.images = self.get_images(self.path)    #load the sprites with get_images
+        self.animation_time_prev = pg.time.get_ticks()  #find the value of the previous animation time
+        self.animation_trigger = False  #trigger to perform actual animation
+
+    def update(self):
+        super().update()
+        self.check_animation_time()
+        self.animate(self.images)
+
+    def animate(self, images):
+        if self.animation_trigger:  #if animation trigger is true...
+            images.rotate(-1)   #...rotate through the queue by 1 image
+            self.image = images[0] #and assign self.images to the new first value
+
+    def check_animation_time(self):
+        self.animation_trigger = False
+        time_now = pg.time.get_ticks()  #get current time
+        if time_now - self.animation_time_prev > self.animation_time:   #if difference of current and previous time is greater than...
+            self.animation_time_prev = time_now #...the animation time, then previous time becomes current and the...
+            self.animation_trigger = True   #...animation trigger is true
+
+    def get_images(self, path):
+        images = deque()  #deque means double ended queue. deque is a list that is easier to append/pop from
+        for file_name in os.listdir(path):  #look over the whole folder indicated by path
+            if os.path.isfile(os.path.join(path, file_name)):
+                img = pg.image.load(path + "/" + file_name).convert_alpha() #grab other images and append them to the queue
+                images.append(img)
+        return images
