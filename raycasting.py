@@ -34,10 +34,9 @@ class RayCasting:
 
     def ray_cast(self): #entire function is using complicated trigonometry in order to determine angles, depth, and the ray casting on the map grid
         self.ray_casting_result = []    #clear list before beginning the ray casting
+        texture_vert, texture_hor = 1, 1
         ox, oy = self.game.player.pos   #don't fully understand the math but in theory it should work for any game based on a grid that uses ray casting
         x_map, y_map = self.game.player.map_pos
-
-        texture_vert, texture_hor = 1, 1
 
         ray_angle = self.game.player.angle - half_fov + 0.0001
         for ray in range(num_rays):

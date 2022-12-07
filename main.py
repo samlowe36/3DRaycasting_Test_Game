@@ -17,6 +17,9 @@ class Game:
         self.screen = pg.display.set_mode(res)  #creates a screen for rendering the set resolution
         self.clock = pg.time.Clock()    #instance of the clock class for frame-rate
         self.delta_time = 1     #delta time is so that movement speed can be independent of frame-rate
+        self.global_trigger = False
+        self.global_event = pg.USEREVENT + 0
+        pg.time.set_timer(self.global_event, 40)    #define user event and give it a timer of 40 milliseconds
         self.new_game()
 
     def new_game(self):
@@ -49,10 +52,13 @@ class Game:
         #self.player.draw()      #draw the player (this was for 2d testing and isnt needed now that it is 3d)
 
     def check_events(self): #function checks for the events of closing the working window or pressing the escape key, and exits app if this happens
+        self.global_trigger = False
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
                 sys.exit()
+            elif event.type == self.global_event:
+                self.global_trigger = True
             self.player.single_fire_event(event)    #check to see if player fired weapon
 
     def run(self):  #main loop of the game runs from here
