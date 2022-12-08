@@ -12,6 +12,7 @@ class ObjectHandler:
         self.anim_sprite_path = "resources/sprites/animated_sprites/"   #paths to sprite folders
         add_sprite = self.add_sprite
         add_npc = self.add_npc
+        self.npc_positions = {}
 
         #sprite map
         add_sprite(SpriteObject(game))  #adds static sprite to game
@@ -40,8 +41,10 @@ class ObjectHandler:
 
         #npc map
         add_npc(NPC(game))  #create instance of npc class and add it to game
+        add_npc(NPC(game, pos=(11.5, 4.5)))
 
     def update(self):
+        self.npc_positions = {npc.map_pos for npc in self.npc_list if npc.alive}    #for making sure npc's dont occupy the same tile
         [sprite.update() for sprite in self.sprite_list]    #call update for all sprites in this list
         [npc.update() for npc in self.npc_list] #call update for all npc's in list
 
