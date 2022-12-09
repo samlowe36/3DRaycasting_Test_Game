@@ -9,6 +9,33 @@ class Player:
         self.x, self.y = player_pos
         self.angle = player_angle   #x/y coordinates of player and angle of direction taken from settings
         self.shot = False
+        self.health = player_max_health
+        self.rel = 0
+        self.health_recovery_delay = 700
+        self.time_prev = pg.time.get_ticks()
+
+    def recover_health(self):
+        if self.check_health_recovery_delay() and self.health < player_max_health:
+            self.health += 1
+
+    def check_health_recovery_delay(self):
+        time_now = pg.time.get_ticks()
+        if time_now - self.time_prev > self.health_recovery_delay:
+            self.time_prev = time_now
+            return True
+
+    def check_game_over(self):
+        if self.health < 1:
+            self.game.object_renderer.game_over()
+            pg.display.flip()
+            pg.time.delay(2000)
+            self.game.new_game()
+
+    def get_damage(self, damage):
+        self.health -= damage
+        self.game.object_renderer.player_damage()
+        self.game.sound.player_pain.play()
+        self.check_game_over()
 
     def single_fire_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:    #if player clicks left mouse button, shot = true
@@ -75,6 +102,7 @@ class Player:
     def update(self):   #updates with the latest movement
         self.movement()
         self.mouse_control()
+        self.recover_health()
 
     @property   #this property returns the player coordinates
     def pos(self):

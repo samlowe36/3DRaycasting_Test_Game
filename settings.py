@@ -13,6 +13,7 @@ player_angle = 0
 player_speed = 0.004
 player_rot_speed = 0.002
 player_size_scale = 60  #give player size larger than a dot (prevents pixelation in textures as we arent tiny)
+player_max_health = 100
 
 mouse_sensitivity = 0.0003  #implementing mouse functionality
 mouse_max_rel = 40  #maxmimum relative movement

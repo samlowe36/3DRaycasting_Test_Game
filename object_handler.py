@@ -1,5 +1,6 @@
 from sprite_object import *
 from npc import *
+from random import choices, randrange
 
 
 class ObjectHandler:
@@ -13,6 +14,13 @@ class ObjectHandler:
         add_sprite = self.add_sprite
         add_npc = self.add_npc
         self.npc_positions = {}
+
+        #spawn NPCs
+        self.enemies = 20   #npc count
+        self.npc_types = [SoldierNPC, CacoDemonNPC, CyberDemonNPC]
+        self.weights = [70, 20, 10]
+        self.restricted_area = {(i, j) for i in range(10) for j in range(10)}
+        self.spawn_npc()
 
         #sprite map
         add_sprite(SpriteObject(game))  #adds static sprite to game
@@ -39,14 +47,30 @@ class ObjectHandler:
         add_sprite(AnimatedSprite(game, pos=(1.5, 30.5)))
         add_sprite(AnimatedSprite(game, pos=(1.5, 24.5)))
 
-        #npc map
-        add_npc(NPC(game))  #create instance of npc class and add it to game
-        add_npc(NPC(game, pos=(11.5, 4.5)))
+        #npc map (no longer needed after spawn function made)
+        #add_npc(NPC(game))  #create instance of npc class and add it to game
+        #add_npc(NPC(game, pos=(11.5, 4.5)))
+
+    def spawn_npc(self):
+        for i in range(self.enemies):
+            npc = choices(self.npc_types, self.weights)[0]
+            pos = x, y = randrange(self.game.map.cols), randrange(self.game.map.rows)
+            while (pos in self.game.map.world_map) or (pos in self.restricted_area):
+                pos = x, y = randrange(self.game.map.cols), randrange(self.game.map.rows)
+            self.add_npc(npc(self.game, pos=(x + 0.5, y + 0.5)))
+
+    def check_win(self):
+        if not len(self.npc_positions):
+            self.game.object_renderer.win()
+            pg.display.flip()
+            pg.time.delay(2000)
+            self.game.new_game()
 
     def update(self):
         self.npc_positions = {npc.map_pos for npc in self.npc_list if npc.alive}    #for making sure npc's dont occupy the same tile
         [sprite.update() for sprite in self.sprite_list]    #call update for all sprites in this list
         [npc.update() for npc in self.npc_list] #call update for all npc's in list
+        self.check_win()
 
     def add_npc(self, npc):
         self.npc_list.append((npc))

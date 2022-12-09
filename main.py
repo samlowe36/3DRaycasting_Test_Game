@@ -34,6 +34,7 @@ class Game:
         self.weapon = Weapon(self)
         self.sound = Sound(self)
         self.pathfinding = PathFinding(self)
+        pg.mixer.music.play(-1)
 
     def update(self):       #function for updating the screen
         self.player.update()

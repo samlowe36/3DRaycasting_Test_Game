@@ -14,6 +14,7 @@ class PathFinding:
         self.visited = self.bfs(start, goal, self.graph)
         path = [goal]
         step = self.visited.get(goal, start)
+
         while step and step != start:
             path.append(step)
             step = self.visited[step]
@@ -27,6 +28,7 @@ class PathFinding:
             if cur_node == goal:    #stop if current node is the goal (the player position)
                 break
             next_nodes = graph[cur_node]
+
             for next_node in next_nodes:
                 if next_node not in visited and next_node not in self.game.object_handler.npc_positions:
                     queue.append(next_node) #add the next adjacent node to the queue and move there if it hasnt been visited
